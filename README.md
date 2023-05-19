@@ -12,7 +12,7 @@ There are two targets to build:
 1. The Client (**OSCPackHelloWorld_Client**)
 2. The Server (**OSCPackHelloWorld_Server**)
 
-Replace the \<t> in this guide with the target you would like to construct. It can also be replaced with "all", in order to build all targets.
+Replace the \<t> in this guide with the target you would like to construct.
 
 ### Configure & Generate
 ```cmake
@@ -25,5 +25,5 @@ cmake --build --config Release --target=OSCPackHelloWorld_<t>
 ```
 ### Run: 
 ```cmake
-./build/OSCPackHelloWorld_<t>
+./build/Release/OSCPackHelloWorld_<t>
 ```
