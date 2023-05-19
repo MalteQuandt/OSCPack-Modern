@@ -1,0 +1,5 @@
+# cmake build folder
+build
+
+# other junk
+.vscode
