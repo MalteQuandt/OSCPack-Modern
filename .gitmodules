@@ -1,0 +1,4 @@
+[submodule "oscpack"]
+	path = extern/oscpack/oscpack
+	url = https://github.com/RossBencina/oscpack
+	branch = master
