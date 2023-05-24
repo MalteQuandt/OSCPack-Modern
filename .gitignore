@@ -2,4 +2,8 @@
 build
 
 # other junk
+## vscode
 .vscode
+## intellij
+.idea
+cmake-build-*
