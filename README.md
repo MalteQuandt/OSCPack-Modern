@@ -21,7 +21,7 @@ cmake -B build -S .
 ### Build
 Replace the \<t> here with either **Server** or **Client**.
 ```cmake
-cmake --build --config Release --target=OSCPackHelloWorld_<t>
+cmake --build build --config Release --target=OSCPackHelloWorld_<t>
 ```
 ### Run: 
 ```cmake
