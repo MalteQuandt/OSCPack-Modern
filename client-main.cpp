@@ -1,9 +1,10 @@
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include <osc/OscOutboundPacketStream.h>
 #include <ip/UdpSocket.h>
-#include <osc/OscTypes.h>
+#include <osc/OscTypes.cpp> // including .h breaks building as shared/dynamic lib. This file is nothing more than a glorified header anyways.
 
 #define ADDRESS "127.0.0.1"
 #define PORT 9001
@@ -11,10 +12,11 @@
 
 using namespace std::chrono_literals;
 
+
 /**
  * @brief Example Program to send some messages over osc
 */
-int main(void) {
+int main() {
     // open socket
     UdpTransmitSocket transmitSocket {IpEndpointName(ADDRESS, PORT)};
 
@@ -30,7 +32,7 @@ int main(void) {
         transmitSocket.Send(p.Data(), p.Size());
         // clear the message queue, so that the buffer can be reused
         p.Clear();
-
+        // stop current thread execution for 2 milliseconds to give the server time to process message
         std::this_thread::sleep_for(2ms);
     }
     return 0;

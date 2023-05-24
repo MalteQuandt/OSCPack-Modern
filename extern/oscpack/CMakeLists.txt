@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 project(OSCPack)
 
 # should the library be build as a dynamic or static lib?
-option(BUILD_STATIC "Build as Static Lib when ON, and Dynamic Lib when OFF" ON)
+option(BUILD_SHARED_LIBS "Build as Static Lib when OFF, and Dynamic/Shared Lib when ON (Default=OFF)" OFF)
 
 if(MINGW OR MSVC)
     set(IpSystemTypePath ${CMAKE_CURRENT_SOURCE_DIR}/oscpack/ip/win32)
@@ -14,14 +14,18 @@ else()
 endif()
 
 # determine build type
-if(BUILD_STATIC)
-    set(LIB_BUILD_TYPE "STATIC")
+if(BUILD_SHARED_LIBS)
+    set(LIB_BUILD_TYPE "SHARED")
+    set(LIB_BUILD_TYPE_NAME "dynamic")
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 else()
-    set(LIB_BUILD_TYPE "DYNAMIC")
+    set(LIB_BUILD_TYPE "STATIC")
+    set(LIB_BUILD_TYPE_NAME "static")
 endif()
-message(STATUS "Build ${LIB_BUILD_TYPE} Lib ${PROJECT_NAME}")
+message(STATUS "Build ${LIB_BUILD_TYPE_NAME} Lib ${PROJECT_NAME}")
 
 
+message(STATUS "${PROJECT_NAME} ${LIB_BUILD_TYPE}")
 add_library(${PROJECT_NAME} ${LIB_BUILD_TYPE})
 
 target_include_directories(${PROJECT_NAME} 
@@ -54,12 +58,21 @@ target_sources(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/oscpack/osc/OscReceivedElements.h
         ${CMAKE_CURRENT_SOURCE_DIR}/oscpack/osc/OscTypes.h)
 
+if(LIB_BUILD_TYPE_NAME STREQUAL "SHARED")
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+            IMPORTED_LOCATION "${DEPENDENCIES_DIR}/${PROJECT_NAME}/bin/${PROJECT_NAME}.dll"
+            IMPORTED_IMPLIB "${DEPENDENCIES_DIR}/${PROJECT_NAME}/lib/${PROJECT_NAME}.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${DEPENDENCIES_DIR}/${PROJECT_NAME}/include"
+            )
+endif()
+
 # if there are libs, link against them
 list(LENGTH LIBS LIBLEN)
 if(NOT ${LIBLEN} EQUAL 0)
     # add the required libraries on windows
     target_link_libraries(${PROJECT_NAME}
-            INTERFACE
+            PUBLIC
                 ${LIBS})
     message(STATUS "Build with libraries " ${LIBS})
+
 endif()
